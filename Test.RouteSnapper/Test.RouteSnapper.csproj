@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\RouteSnapper\RouteSnapper.csproj" />
+	  <ProjectReference Include="..\RouteSnapperLib\RouteSnapperLib.csproj" />
 	</ItemGroup>
 
 </Project>
