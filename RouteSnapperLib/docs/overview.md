@@ -1,6 +1,6 @@
-# J4JSoftware.GeoProcessor: Overview
+# J4JSoftware.RouteSnapperLib: Overview
 
-`GeoProcessor` is a Net 7 library for using online route snapping services to snap imported geolocation (GPS) data to roads.
+`RouteSnapperLib` is a Net 7 library for using online route snapping services to snap imported geolocation (GPS) data to roads.
 
 It has nullability enabled.
 
@@ -18,7 +18,7 @@ It is copyright 2023 Mark A. Olbert and licensed under the GPL v3.
 
 ## Overview
 
-You use `GeoProcessor` by configuring an instance of `RouteBuilder` and then building it. Here's a diagram illustrating the overall process:
+You use `RouteSnapperLib` by configuring an instance of `RouteBuilder` and then building it. Here's a diagram illustrating the overall process:
 
 ![overall process](assets/overview.png)
 
@@ -30,7 +30,7 @@ public RouteBuilder(
 )
 ```
 
-[return to top](#j4jsoftwaregeoprocessor-overview)
+[return to top](#j4jsoftwareroutesnapperlib-overview)
 
 ## Configuration via Extension Methods
 
@@ -42,4 +42,4 @@ You configure `RouteBuilder` by calling various extension methods, which fall in
 - [Specifying the Snapping Service](specifying-the-snapping-service.md)
 - [Logging and Messaging](logging-and-messaging.md)
 
-[return to top](#j4jsoftwaregeoprocessor-overview)
+[return to top](#j4jsoftwareroutesnapperlib-overview)

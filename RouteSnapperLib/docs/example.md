@@ -1,4 +1,4 @@
-# J4JSoftware.GeoProcessor Example
+# J4JSoftware.RouteSnapper Example
 
 A simple example of using the library might look like this:
 

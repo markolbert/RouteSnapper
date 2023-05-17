@@ -28,4 +28,4 @@ public class BuildResults
 |`SnappedRoutes`|`List<SnappedRoute>?`|the snapped route data|
 |`Problems`|`List<string>?`|problems encountered during the snapping process|
 
-[return to overview](overview.md#j4jsoftwaregeoprocessor-overview)
+[return to overview](overview.md#j4jsoftwareRouteSnapperLib-overview)
