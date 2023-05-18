@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RouteSnapper (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "RouteSnapper (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
