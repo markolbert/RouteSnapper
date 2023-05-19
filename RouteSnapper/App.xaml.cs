@@ -1,51 +1,125 @@
 ﻿// Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using System.Security.Cryptography;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace RouteSnapper;
-/// <summary>
-/// Provides application-specific behavior to supplement the default Application class.
-/// </summary>
-public partial class App : Application
+
+public partial class App
 {
-    /// <summary>
-    /// Initializes the singleton application object.  This is the first line of authored code
-    /// executed, and as such is the logical equivalent of main() or WinMain().
-    /// </summary>
+    public new static App Current => (App) Application.Current;
+
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly ILogger _logger;
+    private readonly IDataProtector _dataProtector;
+    private AppConfig? _appConfig;
+
+#pragma warning disable CS8618
     public App()
+#pragma warning restore CS8618
     {
         this.InitializeComponent();
+
+        var logFile = Path.Combine( AppConfig.UserFolder, "log.txt" );
+
+        var seriLogger = new LoggerConfiguration()
+                        .MinimumLevel.Verbose()
+                        .WriteTo.Debug()
+                        .WriteTo.File( logFile, rollingInterval: RollingInterval.Hour )
+                        .CreateLogger();
+
+        _loggerFactory = new LoggerFactory().AddSerilog( seriLogger );
+        _logger = _loggerFactory.CreateLogger<App>();
+
+        var localAppFolder = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+
+        var dpProvider = DataProtectionProvider.Create(
+            new DirectoryInfo( Path.Combine( localAppFolder, "ASP.NET", "DataProtection-Keys" ) ) );
+        _dataProtector = dpProvider.CreateProtector( nameof( RouteSnapper ) );
+
+        var configPath = Path.Combine( AppConfig.UserFolder, "userConfig.json" );
+
+        try
+        {
+            Services = new HostBuilder()
+                      .ConfigureHostConfiguration( builder => ParseUserConfigFile( configPath, builder ) )
+                      .ConfigureServices( ( hbc, s ) => ConfigureServices( hbc, s ) )
+                      .Build()
+                      .Services;
+        }
+        catch( CryptographicException crypto )
+        {
+            var logger = _loggerFactory.CreateLogger<App>();
+            logger.LogError( "Cryptographic error '{mesg}', deleting user configuration file '{path}'",
+                             crypto.Message,
+                             configPath );
+
+            File.Delete( configPath );
+
+            Exit();
+        }
+        catch( JsonException )
+        {
+            Exit();
+        }
     }
 
-    /// <summary>
-    /// Invoked when the application is launched.
-    /// </summary>
-    /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    public IServiceProvider Services { get; }
+
+#pragma warning disable IDE0060
+    // ReSharper disable once UnusedMethodReturnValue.Local
+    // ReSharper disable once UnusedParameter.Local
+    private IServiceCollection ConfigureServices( HostBuilderContext hbc, IServiceCollection services )
+#pragma warning restore IDE0060
     {
-        m_window = new MainWindow();
-        m_window.Activate();
+        services.AddSingleton( _loggerFactory );
+        services.AddSingleton( _dataProtector );
+
+        services.AddSingleton( _appConfig! );
+
+        return services;
     }
 
-    private Window m_window;
+    // ReSharper disable once UnusedParameter.Local
+    private void ParseUserConfigFile( string path, IConfigurationBuilder builder )
+    {
+        var fileExists = File.Exists( path );
+        if( !fileExists )
+        {
+            _logger.LogWarning( "Could not find user config file '{path}', creating default configuration", path );
+            _appConfig = new AppConfig { UserConfigurationFilePath = path };
+
+            return;
+        }
+
+        var encrypted = JsonSerializer.Deserialize<AppConfig>( File.ReadAllText( path ) );
+
+        if( encrypted == null )
+        {
+            _logger.LogError( "Could not parse user config file '{path}'", path );
+            throw new JsonException( $"Could not parse user config file '{path}'" );
+        }
+
+        encrypted.UserConfigurationFilePath = path;
+
+        _appConfig = encrypted.Decrypt( _dataProtector );
+        _appConfig.UserConfigurationFilePath = path;
+    }
+
+    protected override void OnLaunched( LaunchActivatedEventArgs args )
+    {
+        var window = new MainWindow();
+        window.Activate();
+    }
 }
