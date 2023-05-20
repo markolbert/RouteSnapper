@@ -19,7 +19,7 @@ public sealed partial class MainWindow
         this.InitializeComponent();
 
         _winSupport = new MainWindowSupport(this, App.Current.AppSupport);
-        _winSupport.SetInitialWindowPositionAndSize();
+        _winSupport.SetMainWindowSizeAndPosition();
     }
 
     private void myButton_Click(object sender, RoutedEventArgs e)
