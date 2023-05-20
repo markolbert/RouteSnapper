@@ -1,56 +1,13 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.DataProtection;
-using System.Text.Json.Serialization;
-using Windows.Foundation;
+﻿using J4JSoftware.WindowsUtilities;
 
 namespace RouteSnapper;
 
-internal class AppConfig
+internal class AppConfig : AppConfigBase
 {
-    public static string UserFolder { get; } = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
-
-    [JsonIgnore]
-    public string? UserConfigurationFilePath { get; set; }
-
-    [JsonIgnore ]
-    public bool UserConfigurationFileExists =>
-        !string.IsNullOrEmpty( UserConfigurationFilePath )
-     && File.Exists( Path.Combine( UserFolder, UserConfigurationFilePath ) );
-
-    public Point UpperLeft { get; set; }
-    public Size Size { get; set; }
+    [EncryptedProperty]
     public string BingKey { get; set; } = string.Empty;
+
+    [EncryptedProperty]
     public string GoogleKey { get; set; } = string.Empty;
-
-    public AppConfig Encrypt(IDataProtector protector)
-    {
-        var retVal = new AppConfig
-        {
-            UserConfigurationFilePath = UserConfigurationFilePath,
-        };
-
-        if (!string.IsNullOrEmpty(BingKey))
-            retVal.BingKey = protector.Protect(BingKey);
-
-        if (!string.IsNullOrEmpty(GoogleKey))
-            retVal.GoogleKey = protector.Protect(GoogleKey);
-
-        return retVal;
-    }
-
-    public AppConfig Decrypt(IDataProtector protector)
-    {
-        var retVal = new AppConfig
-        {
-            UserConfigurationFilePath = UserConfigurationFilePath,
-        };
-
-        if( !string.IsNullOrEmpty( BingKey ) )
-            retVal.BingKey = protector.Unprotect( BingKey );
-
-        if( !string.IsNullOrEmpty( GoogleKey ) )
-            retVal.GoogleKey = protector.Unprotect( GoogleKey );
-
-        return retVal;
-    }
 }
+
