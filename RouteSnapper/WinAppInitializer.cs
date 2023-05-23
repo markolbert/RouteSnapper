@@ -9,10 +9,10 @@ using Serilog;
 
 namespace RouteSnapper;
 
-internal class WinAppSupport : J4JWinAppSupport<App, AppConfig>
+internal class WinAppInitializer : WinAppInitializerBase<App, AppConfig>
 {
-    public WinAppSupport()
-    :base("userConfig.json")
+    public WinAppInitializer()
+        : base( "userConfig.json" )
     {
     }
 

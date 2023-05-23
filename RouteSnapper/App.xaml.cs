@@ -14,13 +14,13 @@ public partial class App
     {
         this.InitializeComponent();
 
-        if (!AppSupport.Initialize())
+        if (!AppInitializer.Initialize())
             Exit();
 
-        Services = AppSupport.Services!;
+        Services = AppInitializer.Services!;
     }
 
-    internal WinAppSupport AppSupport { get; } = new WinAppSupport();
+    internal WinAppInitializer AppInitializer { get; } = new();
     internal IServiceProvider Services { get; }
 
     protected override void OnLaunched( LaunchActivatedEventArgs args )
