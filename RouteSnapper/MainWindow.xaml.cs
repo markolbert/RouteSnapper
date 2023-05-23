@@ -12,14 +12,12 @@ namespace RouteSnapper;
 /// </summary>
 public sealed partial class MainWindow
 {
-    private readonly MainWindowSupport _winSupport;
-
     public MainWindow()
     {
         this.InitializeComponent();
 
-        _winSupport = new MainWindowSupport(this, App.Current.AppSupport);
-        _winSupport.SetMainWindowSizeAndPosition();
+        var winSupport = new MainWinSerializer(this, App.Current.AppInitializer);
+        winSupport.SetSizeAndPosition();
     }
 
     private void myButton_Click(object sender, RoutedEventArgs e)
