@@ -20,7 +20,7 @@ public sealed partial class MainWindow
         winSupport.SetSizeAndPosition();
     }
 
-    private void myButton_Click(object sender, RoutedEventArgs e)
+    private void MyButton_Click(object sender, RoutedEventArgs e)
     {
         myButton.Content = "Clicked";
     }
