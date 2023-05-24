@@ -9,10 +9,12 @@ using Serilog;
 
 namespace RouteSnapper;
 
-internal class WinAppInitializer : WinAppInitializerBase<App, AppConfig>
+internal class WinAppInitializer : WinAppInitializerBase<AppConfig>
 {
-    public WinAppInitializer()
-        : base( "userConfig.json" )
+    public WinAppInitializer(
+        IWinApp winApp
+        )
+        : base( winApp )
     {
     }
 

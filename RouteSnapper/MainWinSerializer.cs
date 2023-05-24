@@ -4,12 +4,12 @@ using Microsoft.UI.Xaml;
 
 namespace RouteSnapper;
 
-internal class MainWinSerializer : MainWinSerializerBase
+internal class MainWinSerializer : MainWinSerializerBase<AppConfig>
 {
     public MainWinSerializer(
-        Window mainWindow, 
-        IWinAppInitializer initializer
-        ) : base(mainWindow, initializer)
+        Window mainWindow
+    )
+        : base( mainWindow )
     {
     }
 

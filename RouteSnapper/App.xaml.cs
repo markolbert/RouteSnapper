@@ -2,26 +2,28 @@
 // Licensed under the MIT License.
 
 using System;
+using J4JSoftware.WindowsUtilities;
 using Microsoft.UI.Xaml;
 
 namespace RouteSnapper;
 
-public partial class App
+public partial class App : IWinApp
 {
     internal new static App Current => (App) Application.Current;
 
+#pragma warning disable CS8618
     public App()
+#pragma warning restore CS8618
     {
         this.InitializeComponent();
 
-        if (!AppInitializer.Initialize())
+        var appInitializer = new WinAppInitializer( this );
+        if (!appInitializer.Initialize())
             Exit();
-
-        Services = AppInitializer.Services!;
     }
 
-    internal WinAppInitializer AppInitializer { get; } = new();
-    internal IServiceProvider Services { get; }
+    public IServiceProvider Services { get; set; }
+    public bool SaveConfigurationOnExit { get; set; } = true;
 
     protected override void OnLaunched( LaunchActivatedEventArgs args )
     {

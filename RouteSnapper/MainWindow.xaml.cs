@@ -16,7 +16,7 @@ public sealed partial class MainWindow
     {
         this.InitializeComponent();
 
-        var winSupport = new MainWinSerializer(this, App.Current.AppInitializer);
+        var winSupport = new MainWinSerializer( this );
         winSupport.SetSizeAndPosition();
     }
 
