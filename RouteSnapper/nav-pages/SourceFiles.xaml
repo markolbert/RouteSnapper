@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="RouteSnapper.nav_pages.SourceFiles"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RouteSnapper"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Tag="source">
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="sourceFiles"
+                  Grid.Column="0" Grid.Row="0" Grid.RowSpan="5"
+                  BorderThickness="2"
+                  BorderBrush="BlueViolet"
+                  ItemsSource="{x:Bind ViewModel.SourceFiles}"
+                  SelectedIndex="{x:Bind ViewModel.SelectedSourceFileIndex, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:SourceFileInfo">
+                    <CheckBox IsChecked="{x:Bind IsSelected, Mode=OneWay}"
+                              Content="{x:Bind FileName, Mode=OneWay}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <HyperlinkButton Grid.Column="1" Grid.Row="0" 
+                         Margin="5"
+                         Padding="0"
+                         Command="{x:Bind ViewModel.AddSourceFileCommand}">
+            add file(s)
+        </HyperlinkButton>
+
+        <HyperlinkButton Grid.Column="1" Grid.Row="1"
+                         Margin="5"
+                         Padding="0"
+                         Command="{x:Bind ViewModel.RemoveSourceFileCommand}"
+                         CommandParameter="{x:Bind sourceFiles.SelectedIndex, Mode=TwoWay }"
+                         IsEnabled="{Binding ElementName=sourceFiles, Path=SelectedItem, Converter={StaticResource NullToFalse}}">
+            remove file
+        </HyperlinkButton>
+
+        <HyperlinkButton Grid.Column="1" Grid.Row="4" Command="{x:Bind ViewModel.ClearSelectedSourceFileCommand}"
+                         Margin="5"
+                         Padding="0"
+                         IsEnabled="{Binding ElementName=sourceFiles, Path=SelectedItem, Converter={StaticResource NullToFalse}}">
+            clear selection
+        </HyperlinkButton>
+
+        <StackPanel Grid.Column="0" Grid.Row="5"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <HyperlinkButton IsEnabled="{x:Bind ViewModel.EnableSelectClearSourceFiles, Mode=TwoWay}"
+                             Margin="0"
+                             Command="{x:Bind ViewModel.SelectAllSourceFilesCommand}">
+                select all
+            </HyperlinkButton>
+
+            <HyperlinkButton IsEnabled="{x:Bind ViewModel.EnableSelectClearSourceFiles, Mode=TwoWay}"
+                             Margin="0"
+                             Command="{x:Bind ViewModel.ClearAllSourceFilesCommand}">
+                clear all
+            </HyperlinkButton>
+        </StackPanel>
+
+    </Grid>
+</Page>
