@@ -5,6 +5,7 @@
     x:Class="RouteSnapper.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:map="using:J4JSoftware.J4JMapWinLibrary"
     xmlns:local="using:RouteSnapper">
     <Application.Resources>
         <ResourceDictionary>
@@ -13,6 +14,41 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+
+            <local:NullToFalseConverter x:Key="NullToFalse"/>
+            <local:AnyToTrueConverter x:Key="AnyToTrue"/>
+            <local:NonEmptyStringToTrueConverter x:Key="NonEmptyStringToTrue"/>
+
+            <Style TargetType="Grid">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <Style TargetType="ListView">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </Style>
+
+            <Style TargetType="map:J4JMapControl">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
