@@ -8,9 +8,51 @@
     xmlns:local="using:RouteSnapper"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:map="using:J4JSoftware.J4JMapWinLibrary"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d"
+    Title="Route Snapper">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="MyButton_Click">Click Me</Button>
-    </StackPanel>
+    <controls:DockPanel x:Name="stackContainer" 
+                        LastChildFill="True">
+
+        <NavigationView x:Name="navView"
+                        PaneDisplayMode="Left"
+                        Loaded="FrameworkElement_OnLoaded"
+                        ItemInvoked="NavigationView_OnItemInvoked"
+                        BackRequested="NavigationView_OnBackRequested"
+                        IsBackButtonVisible="Collapsed"
+                        IsPaneToggleButtonVisible="False"
+                        IsSettingsVisible="False"
+                        OpenPaneLength="120">
+
+            <NavigationView.Resources>
+                <Thickness x:Key="NavigationViewHeaderMargin">12,0</Thickness>
+            </NavigationView.Resources>
+
+            <NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               FontSize="20"/>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Intro/Help" Tag="intro"/>
+                <NavigationViewItem Content="Source Files" Tag="source"/>
+                <NavigationViewItem Content="Options" Tag="options"/>
+                <NavigationViewItem Content="Export To" Tag="export"/>
+            </NavigationView.MenuItems>
+
+            <ScrollViewer>
+                <Frame x:Name="contentFrame">
+                </Frame>
+            </ScrollViewer>
+        </NavigationView>
+
+        <map:J4JMapControl x:Name="mapControl"/>
+
+    </controls:DockPanel>
 </Window>
