@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using J4JSoftware.J4JMapLibrary;
+using J4JSoftware.J4JMapWinLibrary;
 using J4JSoftware.WindowsUtilities;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace RouteSnapper;
@@ -26,5 +25,16 @@ internal class WinAppInitializer : WinAppInitializerBase<AppConfig>
             .MinimumLevel.Verbose()
             .WriteTo.Debug()
             .WriteTo.File(logFile, rollingInterval: RollingInterval.Hour);
+    }
+
+    protected override IServiceCollection ConfigureServices( HostBuilderContext hbc, IServiceCollection services )
+    {
+        base.ConfigureServices( hbc, services );
+
+        services.AddSingleton(new ProjectionFactory(LoggerFactory));
+        services.AddSingleton(new CredentialsFactory(hbc.Configuration, LoggerFactory));
+        services.AddSingleton(new CredentialsDialogFactory(LoggerFactory));
+
+        return services;
     }
 }
