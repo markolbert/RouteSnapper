@@ -3,7 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
-		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 		<RootNamespace>RouteSnapper</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;ARM64</Platforms>
@@ -12,6 +12,14 @@
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="nav-pages\Export.xaml" />
+	  <None Remove="nav-pages\IntroHelp.xaml" />
+	  <None Remove="nav-pages\Messages.xaml" />
+	  <None Remove="nav-pages\Options.xaml" />
+	  <None Remove="nav-pages\SettingsPage.xaml" />
+	  <None Remove="nav-pages\SourceFiles.xaml" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.scale-200.png" />
@@ -24,11 +32,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
 		<PackageReference Include="J4JSoftware.RouteSnapperLib" Version="1.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="7.0.5" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.3" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230502000" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
@@ -47,7 +58,38 @@
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\..\J4JMapControl2\J4JMapWinLibrary\J4JMapWinLibrary.csproj" />
 	  <ProjectReference Include="..\..\ProgrammingUtilities\WindowsUtilities\WindowsUtilities.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\Messages.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\Export.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\Options.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\SourceFiles.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\IntroHelp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<!-- 
