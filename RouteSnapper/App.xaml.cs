@@ -22,12 +22,13 @@ public partial class App : IWinApp
             Exit();
     }
 
+    public MainWindow? MainWindow { get; private set; }
     public IServiceProvider Services { get; set; }
     public bool SaveConfigurationOnExit { get; set; } = true;
 
     protected override void OnLaunched( LaunchActivatedEventArgs args )
     {
-        var window = new MainWindow();
-        window.Activate();
+        MainWindow = new MainWindow();
+        MainWindow.Activate();
     }
 }
