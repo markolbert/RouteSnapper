@@ -109,19 +109,21 @@ public abstract class MessageBasedTask : IMessageBasedTask
 
     protected async Task SendMessage(
         string phase,
-        string message,
-        bool isProblem = false,
-        bool log = true,
-        LogLevel logLevel = LogLevel.Warning
+        string messageTemplate,
+        LogLevel? level = null,
+        params object[] mesgParams
     )
     {
+        var logLevel = level ?? LogLevel.Information;
+        var message = GeoExtensions.CreateMessageFromTemplate( logLevel, messageTemplate, mesgParams );
+
         if( MessageReporter != null )
-            await MessageReporter( new StatusReport( phase, message ) );
+            await MessageReporter( new StatusReport( logLevel, phase, message ) );
 
-        if( log )
-            Logger?.Log( logLevel, message );
+        if( level != null )
+            Logger?.Log( level.Value, messageTemplate, mesgParams );
 
-        if( isProblem )
+        if( level is > LogLevel.Warning )
             _problems.Add( $"{ExpandedPhase} {message}" );
     }
 

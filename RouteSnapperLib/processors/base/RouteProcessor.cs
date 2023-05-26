@@ -111,28 +111,26 @@ public abstract class RouteProcessor : MessageBasedTask, IRouteProcessor
 
     protected async Task HandleTimeoutExceptionAsync()
     {
-        await SendMessage(ExpandedPhase,
-                          $"Bing processing timed out after {RequestTimeout}",
-                          true,
-                          true,
-                          LogLevel.Error);
+        await SendMessage( ExpandedPhase,
+                           $"Bing processing timed out after {RequestTimeout}",
+                           LogLevel.Error,
+                           RequestTimeout );
+
     }
 
     protected async Task HandleOtherRequestExceptionAsync(string mesg)
     {
-        await SendMessage(ExpandedPhase,
-                          $"Bing processing failed, reply was {mesg}",
-                          true,
-                          true,
-                          LogLevel.Error);
+        await SendMessage( ExpandedPhase,
+                           $"Bing processing failed, reply was {mesg}",
+                           LogLevel.Error,
+                           mesg );
     }
 
     protected async Task HandleInvalidStatusCodeAsync(string description)
     {
         await SendMessage(ExpandedPhase,
                           $"Snap to road request failed, message was '{description}'",
-                          true,
-                          true,
-                          LogLevel.Error);
+                          LogLevel.Error,
+                          description );
     }
 }

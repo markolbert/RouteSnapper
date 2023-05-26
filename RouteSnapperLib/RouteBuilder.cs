@@ -105,13 +105,23 @@ public class RouteBuilder
         return retVal;
     }
 
-    private async Task SendMessage( string phase, string message, bool log = true, LogLevel logLevel = LogLevel.Warning )
+    private async Task SendMessage(
+        string phase,
+        string messageTemplate,
+        LogLevel? level = null,
+        params object[] mesgParams
+    )
     {
-        if( StatusReporter != null )
-            await StatusReporter( new StatusReport( phase, message ) );
+        var logLevel = level ?? LogLevel.Information;
+        var message = GeoExtensions.CreateMessageFromTemplate( logLevel, messageTemplate, mesgParams );
 
-        if( log )
-            Logger?.Log( logLevel, message );
+        if( StatusReporter != null )
+            await StatusReporter( new StatusReport( logLevel, phase, message ) );
+
+        if( level != null )
+#pragma warning disable CA2254
+            Logger?.Log( level.Value, messageTemplate, mesgParams );
+#pragma warning restore CA2254
     }
 
     private async Task SendStatus(

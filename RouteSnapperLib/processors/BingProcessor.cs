@@ -149,8 +149,6 @@ public partial class BingProcessor : RouteProcessor
 
         await SendMessage( ExpandedPhase,
                            "Snap to request did not return usable results",
-                           false,
-                           true,
                            LogLevel.Error );
 
         return null;
