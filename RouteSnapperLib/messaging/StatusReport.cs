@@ -19,6 +19,8 @@
 // with GeoProcessor. If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.Extensions.Logging;
+
 namespace J4JSoftware.RouteSnapper;
 
-public record StatusReport( string Phase, string Message );
+public record StatusReport( LogLevel Level, string Phase, string Message );
