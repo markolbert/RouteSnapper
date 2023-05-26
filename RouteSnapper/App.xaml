@@ -6,6 +6,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:map="using:J4JSoftware.J4JMapWinLibrary"
+    xmlns:conv="using:CommunityToolkit.WinUI.UI.Converters"
     xmlns:local="using:RouteSnapper">
     <Application.Resources>
         <ResourceDictionary>
@@ -18,6 +19,10 @@
             <local:NullToFalseConverter x:Key="NullToFalse"/>
             <local:AnyToTrueConverter x:Key="AnyToTrue"/>
             <local:NonEmptyStringToTrueConverter x:Key="NonEmptyStringToTrue"/>
+            <conv:BoolNegationConverter x:Key="BoolNegation"/>
+            <local:NullableBooleanConverter x:Key="NullableBoolean"/>
+
+            <local:GlobalViewModel x:Key="GlobalViewModel"/>
 
             <Style TargetType="Grid">
                 <Setter Property="Margin" Value="5"/>
