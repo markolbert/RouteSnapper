@@ -9,7 +9,6 @@ using J4JSoftware.J4JMapLibrary;
 using J4JSoftware.J4JMapWinLibrary;
 using J4JSoftware.WindowsUtilities;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -24,8 +23,8 @@ public sealed partial class MainWindow
 
     public MainWindow()
     {
-        var winSupport = new MainWinSerializer(this);
-        MapControlViewModelLocator.Initialize(App.Current.Services);
+        var winSupport = new MainWinSerializer( this );
+        MapControlViewModelLocator.Initialize( App.Current.Services );
 
         this.InitializeComponent();
 
@@ -36,13 +35,13 @@ public sealed partial class MainWindow
 
         _appConfig = App.Current.Services.GetService<AppConfig>();
 
-        if (_appConfig is { UserConfigurationFileExists: true })
+        if( _appConfig is { UserConfigurationFileExists: true } )
         {
             mapControl.MapProjection = string.IsNullOrEmpty( _appConfig.ProjectionName )
                 ? "BingMaps"
                 : _appConfig.ProjectionName;
 
-            mapControl.Center = _appConfig.Center ?? "0,0";
+            mapControl.Center = _appConfig.Center;
             mapControl.Heading = _appConfig.Heading;
             mapControl.MapScale = _appConfig.Scale;
         }
@@ -54,7 +53,8 @@ public sealed partial class MainWindow
 
         _pageTypes.Add( "intro", typeof( IntroHelp ) );
         _pageTypes.Add( "source", typeof( SourceFiles ) );
-        _pageTypes.Add( "options", typeof( Options ) );
+        _pageTypes.Add( "filters", typeof( Filters ) );
+        _pageTypes.Add( "engine", typeof( SnapperEngine ) );
         _pageTypes.Add( "export", typeof( Export ) );
         _pageTypes.Add( "messages", typeof( Messages ) );
     }
@@ -121,13 +121,13 @@ public sealed partial class MainWindow
     {
         navView.IsBackEnabled = contentFrame.CanGoBack;
 
-        if (contentFrame.SourcePageType == typeof(SettingsPage))
-        {
-            // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
-            navView.SelectedItem = (NavigationViewItem)navView.SettingsItem;
-            navView.Header = "Settings";
-            return;
-        }
+        //if (contentFrame.SourcePageType == typeof(SettingsPage))
+        //{
+        //    // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
+        //    navView.SelectedItem = (NavigationViewItem)navView.SettingsItem;
+        //    navView.Header = "Settings";
+        //    return;
+        //}
 
         if( contentFrame.SourcePageType == null )
             return;
@@ -142,11 +142,11 @@ public sealed partial class MainWindow
 
     private void NavigationView_OnItemInvoked( NavigationView sender, NavigationViewItemInvokedEventArgs args )
     {
-        if( args.IsSettingsInvoked == true )
-        {
-            NavigateTo( typeof( SettingsPage ), args.RecommendedNavigationTransitionInfo );
-            return;
-        }
+        //if( args.IsSettingsInvoked == true )
+        //{
+        //    NavigateTo( typeof( SettingsPage ), args.RecommendedNavigationTransitionInfo );
+        //    return;
+        //}
 
         if( !_pageTypes.TryGetValue( args.InvokedItemContainer.Tag?.ToString() ?? string.Empty, out var pageType ) )
             return;

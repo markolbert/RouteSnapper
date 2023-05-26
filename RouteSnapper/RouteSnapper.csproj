@@ -13,11 +13,16 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="nav-pages\ConsolidateBearingFilter.xaml" />
+	  <None Remove="nav-pages\ConsolidateFilter.xaml" />
 	  <None Remove="nav-pages\Export.xaml" />
+	  <None Remove="nav-pages\Filters.xaml" />
 	  <None Remove="nav-pages\IntroHelp.xaml" />
+	  <None Remove="nav-pages\MergeRoutesFilter.xaml" />
 	  <None Remove="nav-pages\Messages.xaml" />
-	  <None Remove="nav-pages\Options.xaml" />
-	  <None Remove="nav-pages\SettingsPage.xaml" />
+	  <None Remove="nav-pages\RemoveClustersFilter.xaml" />
+	  <None Remove="nav-pages\RemoveGarminMessagesFilter.xaml" />
+	  <None Remove="nav-pages\SnapperEngine.xaml" />
 	  <None Remove="nav-pages\SourceFiles.xaml" />
 	</ItemGroup>
 
@@ -33,6 +38,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
 		<PackageReference Include="J4JSoftware.RouteSnapperLib" Version="1.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="7.0.5" />
@@ -62,7 +68,32 @@
 	  <ProjectReference Include="..\..\ProgrammingUtilities\WindowsUtilities\WindowsUtilities.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="nav-pages\SettingsPage.xaml">
+	  <Page Update="nav-pages\SnapperEngine.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\RemoveGarminMessagesFilter.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\RemoveClustersFilter.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\MergeRoutesFilter.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\ConsolidateBearingFilter.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="nav-pages\ConsolidateFilter.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>
@@ -77,7 +108,7 @@
 	  </Page>
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="nav-pages\Options.xaml">
+	  <Page Update="nav-pages\Filters.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>

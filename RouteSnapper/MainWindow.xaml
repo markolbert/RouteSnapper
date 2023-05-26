@@ -42,17 +42,19 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Intro/Help" Tag="intro"/>
                 <NavigationViewItem Content="Source Files" Tag="source"/>
-                <NavigationViewItem Content="Options" Tag="options"/>
+                <NavigationViewItem Content="Filters" Tag="filters"/>
+                <NavigationViewItem Content="Engine" Tag="engine"/>
                 <NavigationViewItem Content="Export To" Tag="export"/>
             </NavigationView.MenuItems>
 
             <ScrollViewer>
-                <Frame x:Name="contentFrame">
-                </Frame>
+                <Frame x:Name="contentFrame" 
+                       IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
             </ScrollViewer>
         </NavigationView>
 
-        <map:J4JMapControl x:Name="mapControl"/>
+        <map:J4JMapControl x:Name="mapControl"
+                           IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
 
     </controls:DockPanel>
 </Window>

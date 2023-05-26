@@ -35,6 +35,11 @@ internal class WinAppInitializer : WinAppInitializerBase<AppConfig>
         services.AddSingleton(new CredentialsFactory(hbc.Configuration, LoggerFactory));
         services.AddSingleton(new CredentialsDialogFactory(LoggerFactory));
 
+        services.AddSingleton<SourceFilesViewModel>();
+        services.AddSingleton<FiltersViewModel>();
+        services.AddSingleton<ExportViewModel>();
+        services.AddSingleton<EngineViewModel>();
+
         return services;
     }
 }
