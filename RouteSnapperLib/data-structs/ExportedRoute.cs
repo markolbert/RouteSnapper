@@ -36,5 +36,4 @@ public class ExportedRoute
     public string? Description { get; set; }
 
     public List<Point> Points { get; }
-    public SnapProcessStatus Status { get; set; } = SnapProcessStatus.NoResultsReturned;
 }
