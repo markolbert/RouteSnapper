@@ -19,14 +19,20 @@
 // with GeoProcessor. If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 // ReSharper disable NotAccessedPositionalProperty.Local
 
 namespace J4JSoftware.RouteSnapper;
 
 public static partial class GeoExtensions
 {
+    [GeneratedRegex(@"[^{}]*?({[^{}]*})", RegexOptions.IgnoreCase, "en-US")]
+    private static partial Regex ExtractMessageParameters();
+
     public static string ChangeFileExtension( string filePath, string extension )
     {
         var dirPath = Path.GetDirectoryName( filePath ) ?? string.Empty;
@@ -39,7 +45,7 @@ public static partial class GeoExtensions
 
     public static Color RouteColorPicker( SnappedRoute route, int routeIndex )
     {
-        routeIndex = routeIndex % 10;
+        routeIndex %= 10;
 
         return routeIndex switch
         {
@@ -57,4 +63,25 @@ public static partial class GeoExtensions
     }
 
     public static int RouteWidthPicker( SnappedRoute route, int routeIndex ) => GeoConstants.DefaultRouteWidth;
+
+    public static string CreateMessageFromTemplate(LogLevel level, string template, object[] mesgParams)
+    {
+        var tokens = new List<string>();
+
+        foreach (var match in ExtractMessageParameters().EnumerateMatches(template))
+        {
+            tokens.Add(template.Substring(match.Index, match.Length));
+        }
+
+        for (var idx = 0; idx < mesgParams.Length; idx++)
+        {
+            if (idx >= tokens.Count)
+                continue;
+
+            template = template.Replace(tokens[idx], mesgParams[idx].ToString());
+        }
+
+        return $"{level}: {template}";
+    }
+
 }

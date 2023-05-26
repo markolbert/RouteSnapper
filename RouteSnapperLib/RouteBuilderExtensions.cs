@@ -143,8 +143,7 @@ public static class RouteBuilderExtensions
         Distance? maxConsolDist = null
     )
     {
-        // 2.5 km is the max distance between points for Bing
-        maxConsolDist ??= new Distance( UnitType.Kilometers, 2.5 );
+        maxConsolDist ??= new Distance( UnitType.Kilometers, GeoConstants.DefaultMaxPointSeparationKm );
 
         var filter = new ConsolidateAlongBearing( builder.LoggerFactory )
         {
@@ -176,7 +175,7 @@ public static class RouteBuilderExtensions
         Distance? maxClusterRadius = null
     )
     {
-        maxClusterRadius ??= new Distance( UnitType.Meters, GeoConstants.DefaultMaxClusterDiameterMeters );
+        maxClusterRadius ??= new Distance( UnitType.Meters, GeoConstants.DefaultMaxClusterRadiusMeters );
 
         var filter = new RemoveClusters( builder.LoggerFactory ) { MaximumClusterRadius = maxClusterRadius };
 
