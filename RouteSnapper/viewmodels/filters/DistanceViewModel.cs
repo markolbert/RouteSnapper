@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using J4JSoftware.RouteSnapper;
 
@@ -15,7 +16,8 @@ public class DistanceViewModel : ObservableObject
         set => SetProperty( ref _distValue, value );
     }
 
-    public List<UnitType> DistanceUnits { get; } = new( Constants.MeasurementUnits );
+    [JsonIgnore]
+    public List<UnitType> DistanceUnits { get; set; } = new( Constants.MeasurementUnits );
 
     public UnitType DistanceUnit
     {
