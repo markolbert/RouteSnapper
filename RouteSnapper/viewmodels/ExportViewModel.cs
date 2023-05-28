@@ -7,6 +7,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Text.Json.Serialization;
 
 namespace RouteSnapper;
 
@@ -74,8 +75,10 @@ public class ExportViewModel : ObservableObject
         }
     }
 
+    [JsonIgnore]
     public bool ExportEnabled => ExportToGpx || ExportToKml || ExportToKmz;
 
+    [JsonIgnore]
     public AsyncRelayCommand SelectExportFolderCommandAsync { get; }
 
     private async Task SelectExportFolderHandlerAsync()
