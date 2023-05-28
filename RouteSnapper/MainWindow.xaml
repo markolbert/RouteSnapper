@@ -15,10 +15,10 @@
     mc:Ignorable="d"
     Title="Route Snapper">
 
-    <controls:DockPanel x:Name="stackContainer" 
+    <controls:DockPanel x:Name="StackContainer" 
                         LastChildFill="True">
 
-        <NavigationView x:Name="navView"
+        <NavigationView x:Name="NavView"
                         PaneDisplayMode="Left"
                         Loaded="FrameworkElement_OnLoaded"
                         ItemInvoked="NavigationView_OnItemInvoked"
@@ -48,12 +48,13 @@
             </NavigationView.MenuItems>
 
             <ScrollViewer>
-                <Frame x:Name="contentFrame" 
+                <Frame x:Name="ContentFrame" 
+                       MinWidth="400"
                        IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
             </ScrollViewer>
         </NavigationView>
 
-        <map:J4JMapControl x:Name="mapControl"
+        <map:J4JMapControl x:Name="MapControl"
                            IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
 
     </controls:DockPanel>

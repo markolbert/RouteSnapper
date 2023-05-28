@@ -30,25 +30,25 @@ public sealed partial class MainWindow
 
         winSupport.SetSizeAndPosition();
 
-        mapControl.FileSystemCachePath = Path.Combine( AppConfigBase.UserFolder, "map-cache" );
-        mapControl.NewCredentials += MapControlOnNewCredentials;
+        MapControl.FileSystemCachePath = Path.Combine( AppConfigBase.UserFolder, "map-cache" );
+        MapControl.NewCredentials += MapControlOnNewCredentials;
 
         _appConfig = App.Current.Services.GetService<AppConfig>();
 
         if( _appConfig is { UserConfigurationFileExists: true } )
         {
-            mapControl.MapProjection = string.IsNullOrEmpty( _appConfig.MapViewModel.ProjectionName )
+            MapControl.MapProjection = string.IsNullOrEmpty( _appConfig.MapViewModel.ProjectionName )
                 ? "BingMaps"
                 : _appConfig.MapViewModel.ProjectionName;
 
-            mapControl.Center = _appConfig.MapViewModel.Center;
-            mapControl.Heading = _appConfig.MapViewModel.Heading;
-            mapControl.MapScale = _appConfig.MapViewModel.Scale;
+            MapControl.Center = _appConfig.MapViewModel.Center;
+            MapControl.Heading = _appConfig.MapViewModel.Heading;
+            MapControl.MapScale = _appConfig.MapViewModel.Scale;
         }
         else
         {
-            mapControl.MapProjection = "BingMaps";
-            mapControl.Center = "37.5072N,122.2605W";
+            MapControl.MapProjection = "BingMaps";
+            MapControl.Center = "37.5072N,122.2605W";
         }
 
         _pageTypes.Add( "intro", typeof( IntroHelp ) );
@@ -103,23 +103,23 @@ public sealed partial class MainWindow
 
     private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
     {
-        contentFrame.Navigated += ContentFrame_Navigated;
-        navView.SelectedItem = navView.MenuItems[ 0 ];
+        ContentFrame.Navigated += ContentFrame_Navigated;
+        NavView.SelectedItem = NavView.MenuItems[ 0 ];
         NavigateTo( typeof( IntroHelp ), null );
     }
 
     private void NavigateTo( Type pageType, NavigationTransitionInfo? transitionInfo )
     {
-        var preNavPageType = contentFrame.CurrentSourcePageType;
+        var preNavPageType = ContentFrame.CurrentSourcePageType;
 
         // Only navigate if the selected page isn't currently loaded.
         if (!Type.Equals(preNavPageType, pageType))
-            contentFrame.Navigate(pageType, null, transitionInfo);
+            ContentFrame.Navigate(pageType, null, transitionInfo);
     }
 
     private void ContentFrame_Navigated(object sender, Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
     {
-        navView.IsBackEnabled = contentFrame.CanGoBack;
+        NavView.IsBackEnabled = ContentFrame.CanGoBack;
 
         //if (contentFrame.SourcePageType == typeof(SettingsPage))
         //{
@@ -129,15 +129,15 @@ public sealed partial class MainWindow
         //    return;
         //}
 
-        if( contentFrame.SourcePageType == null )
+        if( ContentFrame.SourcePageType == null )
             return;
 
         // Select the nav view item that corresponds to the page being navigated to.
-        navView.SelectedItem = navView.MenuItems
+        NavView.SelectedItem = NavView.MenuItems
                                       .OfType<NavigationViewItem>()
-                                      .First( i => i.Tag.Equals( ((Page) contentFrame.Content).Tag ) );
+                                      .First( i => i.Tag.Equals( ((Page) ContentFrame.Content).Tag ) );
 
-        navView.Header = ( (NavigationViewItem) navView.SelectedItem )?.Content?.ToString();
+        NavView.Header = ( (NavigationViewItem) NavView.SelectedItem )?.Content?.ToString();
     }
 
     private void NavigationView_OnItemInvoked( NavigationView sender, NavigationViewItemInvokedEventArgs args )
@@ -161,14 +161,14 @@ public sealed partial class MainWindow
 
     private void TryGoBack()
     {
-        if( !contentFrame.CanGoBack )
+        if( !ContentFrame.CanGoBack )
             return;
 
         // Don't go back if the nav pane is overlayed.
-        if (navView.IsPaneOpen &&
-            navView.DisplayMode is NavigationViewDisplayMode.Compact or NavigationViewDisplayMode.Minimal)
+        if (NavView.IsPaneOpen &&
+            NavView.DisplayMode is NavigationViewDisplayMode.Compact or NavigationViewDisplayMode.Minimal)
             return;
 
-        contentFrame.GoBack();
+        ContentFrame.GoBack();
     }
 }
