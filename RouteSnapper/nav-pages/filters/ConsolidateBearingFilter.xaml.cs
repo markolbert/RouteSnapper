@@ -8,8 +8,11 @@ public sealed partial class ConsolidateBearingFilter
     {
         this.InitializeComponent();
 
-        ViewModel = App.Current.Services.GetRequiredService<FiltersViewModel>();
+        ViewModel = App.Current.Services
+            .GetRequiredService<AppConfig>()
+            .FiltersViewModel
+            .ConsolidateBearingViewModel;
     }
 
-    public FiltersViewModel ViewModel { get; }
+    public ConsolidateBearingViewModel ViewModel { get; }
 }

@@ -31,31 +31,31 @@
             Consolidate Points Filter
         </TextBlock>
 
-        <CheckBox x:Name="applyFilter"
+        <CheckBox x:Name="ApplyFilter"
                   Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
-                  IsChecked="{x:Bind ViewModel.ConsolidatePointsFilter.Apply, Mode=TwoWay}">
+                  IsChecked="{x:Bind ViewModel.Apply, Mode=TwoWay}">
             Apply
         </CheckBox>
 
         <TextBlock Grid.Column="0" Grid.Row="2">Minimum Point Gap</TextBlock>
         <NumberBox Grid.Column="1" Grid.Row="2"
-                   IsEnabled="{Binding ElementName=applyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
+                   IsEnabled="{Binding ElementName=ApplyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
                    VerticalAlignment="Center"
-                   Value="{x:Bind ViewModel.ConsolidatePointsFilter.MinimumPointGap.DistanceValue, Mode=TwoWay}"/>
+                   Value="{x:Bind ViewModel.MinimumPointGap.DistanceValue, Mode=TwoWay}"/>
         <ComboBox Grid.Column="2" Grid.Row="2" 
-                  IsEnabled="{Binding ElementName=applyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
-                  ItemsSource="{x:Bind ViewModel.ConsolidatePointsFilter.MinimumPointGap.DistanceUnits}"
-                  SelectedItem="{x:Bind ViewModel.ConsolidatePointsFilter.MinimumPointGap.DistanceUnit, Mode=TwoWay}"/>
+                  IsEnabled="{Binding ElementName=ApplyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
+                  ItemsSource="{x:Bind ViewModel.MinimumPointGap.DistanceUnits}"
+                  SelectedItem="{x:Bind ViewModel.MinimumPointGap.DistanceUnit, Mode=TwoWay}"/>
 
         <TextBlock Grid.Column="0" Grid.Row="3">Maximum Overall Gap</TextBlock>
         <NumberBox Grid.Column="1" Grid.Row="3" 
-                   IsEnabled="{Binding ElementName=applyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
+                   IsEnabled="{Binding ElementName=ApplyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
                    VerticalAlignment="Center"
-                   Value="{x:Bind ViewModel.ConsolidatePointsFilter.MaximumOverallGap.DistanceValue, Mode=TwoWay}"/>
+                   Value="{x:Bind ViewModel.MaximumOverallGap.DistanceValue, Mode=TwoWay}"/>
         <ComboBox Grid.Column="2" Grid.Row="3" 
-                  IsEnabled="{Binding ElementName=applyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
-                  ItemsSource="{x:Bind ViewModel.ConsolidatePointsFilter.MaximumOverallGap.DistanceUnits}"
-                  SelectedItem="{x:Bind ViewModel.ConsolidatePointsFilter.MaximumOverallGap.DistanceUnit, Mode=TwoWay}"/>
+                  IsEnabled="{Binding ElementName=ApplyFilter, Path=IsChecked, Converter={StaticResource NullableBoolean}}"
+                  ItemsSource="{x:Bind ViewModel.MaximumOverallGap.DistanceUnits}"
+                  SelectedItem="{x:Bind ViewModel.MaximumOverallGap.DistanceUnit, Mode=TwoWay}"/>
 
     </Grid>
 </UserControl>

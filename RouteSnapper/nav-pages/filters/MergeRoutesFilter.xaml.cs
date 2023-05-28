@@ -8,8 +8,11 @@ public sealed partial class MergeRoutesFilter
     {
         this.InitializeComponent();
 
-        ViewModel = App.Current.Services.GetRequiredService<FiltersViewModel>();
+        ViewModel = App.Current.Services
+            .GetRequiredService<AppConfig>()
+            .FiltersViewModel
+            .MergeRoutesViewModel;
     }
 
-    public FiltersViewModel ViewModel { get; }
+    public MergeRoutesViewModel ViewModel { get; }
 }

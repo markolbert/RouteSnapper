@@ -8,8 +8,11 @@ public sealed partial class ConsolidateFilter
     {
         this.InitializeComponent();
 
-        ViewModel = App.Current.Services.GetRequiredService<FiltersViewModel>();
+        ViewModel = App.Current.Services
+            .GetRequiredService<AppConfig>()
+            .FiltersViewModel
+            .ConsolidatePointsViewModel;
     }
 
-    public FiltersViewModel ViewModel { get; }
+    public ConsolidatePointsViewModel ViewModel { get; }
 }
