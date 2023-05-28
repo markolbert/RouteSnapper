@@ -13,7 +13,7 @@ internal class WinAppInitializer : WinAppInitializerBase<AppConfig>
     public WinAppInitializer(
         IWinApp winApp
         )
-        : base( winApp )
+        : base( winApp, jsonOptions:MainWinSerializer.CreateJsonOptions() )
     {
     }
 
@@ -27,18 +27,37 @@ internal class WinAppInitializer : WinAppInitializerBase<AppConfig>
             .WriteTo.File(logFile, rollingInterval: RollingInterval.Hour);
     }
 
-    protected override IServiceCollection ConfigureServices( HostBuilderContext hbc, IServiceCollection services )
+    protected override IServiceCollection ConfigureServices(HostBuilderContext hbc, IServiceCollection services)
     {
-        base.ConfigureServices( hbc, services );
+        base.ConfigureServices(hbc, services);
 
         services.AddSingleton(new ProjectionFactory(LoggerFactory));
         services.AddSingleton(new CredentialsFactory(hbc.Configuration, LoggerFactory));
         services.AddSingleton(new CredentialsDialogFactory(LoggerFactory));
 
-        services.AddSingleton<SourceFilesViewModel>();
-        services.AddSingleton<FiltersViewModel>();
-        services.AddSingleton<ExportViewModel>();
-        services.AddSingleton<EngineViewModel>();
+        //services.AddSingleton(sp =>
+        //{
+        //    var appConfig = sp.GetRequiredService<AppConfig>();
+        //    return appConfig.SourceFilesViewModel;
+        //});
+
+        //services.AddSingleton(sp =>
+        //{
+        //    var appConfig = sp.GetRequiredService<AppConfig>();
+        //    return appConfig.FiltersViewModel;
+        //});
+
+        //services.AddSingleton(sp =>
+        //{
+        //    var appConfig = sp.GetRequiredService<AppConfig>();
+        //    return appConfig.ExportViewModel;
+        //});
+
+        //services.AddSingleton(sp =>
+        //{
+        //    var appConfig = sp.GetRequiredService<AppConfig>();
+        //    return appConfig.EngineViewModel;
+        //});
 
         return services;
     }
