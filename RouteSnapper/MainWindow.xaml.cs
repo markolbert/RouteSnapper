@@ -5,21 +5,22 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
 using J4JSoftware.J4JMapLibrary;
 using J4JSoftware.J4JMapWinLibrary;
 using J4JSoftware.WindowsUtilities;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
 using RouteSnapper.nav_pages;
 
 namespace RouteSnapper;
 
 public sealed partial class MainWindow
 {
+    private record MainMenuItem(string Title, UserControl Control);
+
+    private readonly Dictionary<string, MainMenuItem> _mainMenuItems = new(StringComparer.OrdinalIgnoreCase);
     private readonly AppConfig? _appConfig;
-    private readonly Dictionary<string, Type> _pageTypes = new( StringComparer.OrdinalIgnoreCase );
 
     public MainWindow()
     {
@@ -51,13 +52,33 @@ public sealed partial class MainWindow
             MapControl.Center = "37.5072N,122.2605W";
         }
 
-        _pageTypes.Add( "intro", typeof( IntroHelp ) );
-        _pageTypes.Add( "source", typeof( SourceFiles ) );
-        _pageTypes.Add( "filters", typeof( Filters ) );
-        _pageTypes.Add( "engine", typeof( SnapperEngine ) );
-        _pageTypes.Add( "export", typeof( Export ) );
-        _pageTypes.Add( "messages", typeof( Messages ) );
+        ViewModel = new MainViewModel();
+
+        _mainMenuItems.Add("intro", new MainMenuItem("Intro/Help", new IntroHelp()));
+        _mainMenuItems.Add("source", new MainMenuItem("Source Files", new SourceFiles()));
+        _mainMenuItems.Add("filters", new MainMenuItem("Filters", new Filters()));
+        _mainMenuItems.Add("engine", new MainMenuItem("Snapping Engine", new SnapperEngine()));
+        _mainMenuItems.Add("export", new MainMenuItem("Export Targets", new Export()));
+
+        MenuItems.SelectedIndex = 0;
+        MenuItemHeader.Text = _mainMenuItems["intro"].Title;
+        ContentFrame.Content = _mainMenuItems["intro"].Control;
+
+        WeakReferenceMessenger.Default.Register<MainMenuSelection>(this, MenuMenuSelectionHandler);
     }
+
+    private void MenuMenuSelectionHandler(object recipient, MainMenuSelection message)
+    {
+        var menuItem = _mainMenuItems.TryGetValue(message.MenuItem, out var contentControl)
+            ? contentControl
+            : _mainMenuItems["intro"];
+
+        MenuItemHeader.Text = menuItem.Title;
+        ContentFrame.Content = menuItem.Control;
+        MenuItems.SelectedIndex = _mainMenuItems.Keys.ToList().IndexOf(message.MenuItem);
+    }
+
+    public MainViewModel ViewModel { get; }
 
     private void MapControlOnNewCredentials( object? sender, NewCredentialsEventArgs e )
     {
@@ -99,76 +120,5 @@ public sealed partial class MainWindow
                     break;
             }
         }
-    }
-
-    private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        ContentFrame.Navigated += ContentFrame_Navigated;
-        NavView.SelectedItem = NavView.MenuItems[ 0 ];
-        NavigateTo( typeof( IntroHelp ), null );
-    }
-
-    private void NavigateTo( Type pageType, NavigationTransitionInfo? transitionInfo )
-    {
-        var preNavPageType = ContentFrame.CurrentSourcePageType;
-
-        // Only navigate if the selected page isn't currently loaded.
-        if (!Type.Equals(preNavPageType, pageType))
-            ContentFrame.Navigate(pageType, null, transitionInfo);
-    }
-
-    private void ContentFrame_Navigated(object sender, Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
-    {
-        NavView.IsBackEnabled = ContentFrame.CanGoBack;
-
-        //if (contentFrame.SourcePageType == typeof(SettingsPage))
-        //{
-        //    // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
-        //    navView.SelectedItem = (NavigationViewItem)navView.SettingsItem;
-        //    navView.Header = "Settings";
-        //    return;
-        //}
-
-        if( ContentFrame.SourcePageType == null )
-            return;
-
-        // Select the nav view item that corresponds to the page being navigated to.
-        NavView.SelectedItem = NavView.MenuItems
-                                      .OfType<NavigationViewItem>()
-                                      .First( i => i.Tag.Equals( ((Page) ContentFrame.Content).Tag ) );
-
-        NavView.Header = ( (NavigationViewItem) NavView.SelectedItem )?.Content?.ToString();
-    }
-
-    private void NavigationView_OnItemInvoked( NavigationView sender, NavigationViewItemInvokedEventArgs args )
-    {
-        //if( args.IsSettingsInvoked == true )
-        //{
-        //    NavigateTo( typeof( SettingsPage ), args.RecommendedNavigationTransitionInfo );
-        //    return;
-        //}
-
-        if( !_pageTypes.TryGetValue( args.InvokedItemContainer.Tag?.ToString() ?? string.Empty, out var pageType ) )
-            return;
-
-        NavigateTo( pageType, args.RecommendedNavigationTransitionInfo );
-    }
-
-    private void NavigationView_OnBackRequested( NavigationView sender, NavigationViewBackRequestedEventArgs args )
-    {
-        TryGoBack();
-    }
-
-    private void TryGoBack()
-    {
-        if( !ContentFrame.CanGoBack )
-            return;
-
-        // Don't go back if the nav pane is overlayed.
-        if (NavView.IsPaneOpen &&
-            NavView.DisplayMode is NavigationViewDisplayMode.Compact or NavigationViewDisplayMode.Minimal)
-            return;
-
-        ContentFrame.GoBack();
     }
 }

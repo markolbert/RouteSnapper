@@ -6,6 +6,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:RouteSnapper"
+    xmlns:navpages="using:RouteSnapper.nav_pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:map="using:J4JSoftware.J4JMapWinLibrary"
@@ -15,46 +16,62 @@
     mc:Ignorable="d"
     Title="Route Snapper">
 
-    <controls:DockPanel x:Name="StackContainer" 
+    <controls:DockPanel x:Name="MainContainer"
                         LastChildFill="True">
 
-        <NavigationView x:Name="NavView"
-                        PaneDisplayMode="Left"
-                        Loaded="FrameworkElement_OnLoaded"
-                        ItemInvoked="NavigationView_OnItemInvoked"
-                        BackRequested="NavigationView_OnBackRequested"
-                        IsBackButtonVisible="Collapsed"
-                        IsPaneToggleButtonVisible="False"
-                        IsSettingsVisible="False"
-                        OpenPaneLength="170">
+        <ListView x:Name="MenuItems"
+                  controls:DockPanel.Dock="Left">
 
-            <NavigationView.Resources>
-                <Thickness x:Key="NavigationViewHeaderMargin">12,0</Thickness>
-            </NavigationView.Resources>
+            <ListView.Resources>
+                <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="BlueViolet"/>
+            </ListView.Resources>
 
-            <NavigationView.HeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}"
-                               FontSize="20"/>
-                </DataTemplate>
-            </NavigationView.HeaderTemplate>
+            <ListView.Items>
+                <HyperlinkButton Foreground="White"
+                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
+                                 CommandParameter="intro">Intro/Help</HyperlinkButton>
+                <HyperlinkButton Foreground="White"
+                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
+                                 CommandParameter="source">Source Files</HyperlinkButton>
+                <HyperlinkButton Foreground="White"
+                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
+                                 CommandParameter="filters">Filters</HyperlinkButton>
+                <HyperlinkButton Foreground="White"
+                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
+                                 CommandParameter="engine">Engine</HyperlinkButton>
+                <HyperlinkButton Foreground="White"
+                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
+                                 CommandParameter="export">Export To</HyperlinkButton>
+            </ListView.Items>
 
-            <NavigationView.MenuItems>
-                <NavigationViewItem Content="Intro/Help" Tag="intro"/>
-                <NavigationViewItem Content="Source Files" Tag="source"/>
-                <NavigationViewItem Content="Filters" Tag="filters"/>
-                <NavigationViewItem Content="Engine" Tag="engine"/>
-                <NavigationViewItem Content="Export To" Tag="export"/>
-            </NavigationView.MenuItems>
+        </ListView>
 
-            <ScrollViewer>
-                <Frame x:Name="ContentFrame" 
-                       MinWidth="400"
+        <Grid controls:DockPanel.Dock="Left">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition x:Name="ScrollingRow" Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="MenuItemHeader"
+                       Grid.Column="0" Grid.Row="0"
+                       FontSize="24"
+                       FontWeight="Bold"/>
+
+            <ScrollViewer Grid.Column="0" Grid.Row="1"
+                          Height="{Binding ElementName=ScrollingRow, Path=ActualHeight}">
+                <Frame x:Name="ContentFrame"
                        IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
             </ScrollViewer>
-        </NavigationView>
+
+        </Grid>
 
         <map:J4JMapControl x:Name="MapControl"
+                           controls:DockPanel.Dock="Left"
                            IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
 
     </controls:DockPanel>
