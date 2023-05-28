@@ -22,7 +22,7 @@
             <conv:BoolNegationConverter x:Key="BoolNegation"/>
             <local:NullableBooleanConverter x:Key="NullableBoolean"/>
 
-            <local:GlobalViewModel x:Key="GlobalViewModel"/>
+            <local:MainViewModel x:Key="GlobalViewModel"/>
 
             <Style TargetType="Grid">
                 <Setter Property="Margin" Value="5"/>
