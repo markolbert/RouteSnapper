@@ -8,7 +8,9 @@ public sealed partial class SourceFiles
     {
         this.InitializeComponent();
 
-        ViewModel = App.Current.Services.GetRequiredService<SourceFilesViewModel>();
+        ViewModel = App.Current.Services
+            .GetRequiredService<AppConfig>()
+            .SourceFilesViewModel;
     }
 
     public SourceFilesViewModel ViewModel { get; }

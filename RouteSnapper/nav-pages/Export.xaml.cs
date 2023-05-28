@@ -8,7 +8,9 @@ public sealed partial class Export
     {
         this.InitializeComponent();
 
-        ViewModel = App.Current.Services.GetRequiredService<ExportViewModel>();
+        ViewModel = App.Current.Services
+            .GetRequiredService<AppConfig>()
+            .ExportViewModel;
     }
 
     public ExportViewModel ViewModel { get; }

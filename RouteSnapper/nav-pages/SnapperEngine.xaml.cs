@@ -8,7 +8,9 @@ public sealed partial class SnapperEngine
     {
         this.InitializeComponent();
 
-        ViewModel = App.Current.Services.GetRequiredService<EngineViewModel>();
+        ViewModel = App.Current.Services
+            .GetRequiredService<AppConfig>()
+            .EngineViewModel;
     }
 
     public EngineViewModel ViewModel { get; }
