@@ -37,13 +37,13 @@ public sealed partial class MainWindow
 
         if( _appConfig is { UserConfigurationFileExists: true } )
         {
-            mapControl.MapProjection = string.IsNullOrEmpty( _appConfig.ProjectionName )
+            mapControl.MapProjection = string.IsNullOrEmpty( _appConfig.MapViewModel.ProjectionName )
                 ? "BingMaps"
-                : _appConfig.ProjectionName;
+                : _appConfig.MapViewModel.ProjectionName;
 
-            mapControl.Center = _appConfig.Center;
-            mapControl.Heading = _appConfig.Heading;
-            mapControl.MapScale = _appConfig.Scale;
+            mapControl.Center = _appConfig.MapViewModel.Center;
+            mapControl.Heading = _appConfig.MapViewModel.Heading;
+            mapControl.MapScale = _appConfig.MapViewModel.Scale;
         }
         else
         {
@@ -64,7 +64,7 @@ public sealed partial class MainWindow
         if( _appConfig == null )
             return;
 
-        _appConfig.ProjectionName = e.ProjectionName;
+        _appConfig.MapViewModel.ProjectionName = e.ProjectionName;
 
         foreach( var credProp in e.Credentials
                                   .CredentialProperties
@@ -73,29 +73,29 @@ public sealed partial class MainWindow
             switch( e.ProjectionName.ToLower() )
             {
                 case "bingmaps":
-                    _appConfig.BingKey = (string) credProp.Value!;
+                    _appConfig.EngineViewModel.BingKey = (string) credProp.Value!;
                     break;
 
                 case "googlemaps":
                     switch( credProp.PropertyName )
                     {
                         case nameof( GoogleCredentials.ApiKey ):
-                            _appConfig.GoogleKey = (string) credProp.Value!;
+                            _appConfig.EngineViewModel.GoogleKey = (string) credProp.Value!;
                             break;
 
                         case nameof( GoogleCredentials.SignatureSecret ):
-                            _appConfig.GoogleSignatureSecret = (string) credProp.Value!;
+                            _appConfig.EngineViewModel.GoogleSignatureSecret = (string) credProp.Value!;
                             break;
                     }
 
                     break;
 
                 case "openstreetmaps":
-                    _appConfig.OpenStreetMapsKey = (string) credProp.Value!;
+                    _appConfig.EngineViewModel.OpenStreetMapsKey = (string) credProp.Value!;
                     break;
 
                 case "opentopomaps":
-                    _appConfig.OpenTopoMapsKey = (string) credProp.Value!;
+                    _appConfig.EngineViewModel.OpenTopoMapsKey = (string) credProp.Value!;
                     break;
             }
         }
