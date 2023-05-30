@@ -16,33 +16,25 @@
     mc:Ignorable="d"
     Title="Route Snapper">
 
-    <controls:DockPanel x:Name="MainContainer"
-                        LastChildFill="True">
+    <controls:DockPanel LastChildFill="True">
 
-        <ListView x:Name="MenuItems"
-                  controls:DockPanel.Dock="Left">
+        <ListView x:Name="menuItems"
+                  controls:DockPanel.Dock="Left"
+                  ItemsSource="{x:Bind ViewModel.MainMenuItems}">
 
-            <ListView.Resources>
-                <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="BlueViolet"/>
-            </ListView.Resources>
-
-            <ListView.Items>
-                <HyperlinkButton Foreground="White"
-                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
-                                 CommandParameter="intro">Intro/Help</HyperlinkButton>
-                <HyperlinkButton Foreground="White"
-                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
-                                 CommandParameter="source">Source Files</HyperlinkButton>
-                <HyperlinkButton Foreground="White"
-                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
-                                 CommandParameter="filters">Filters</HyperlinkButton>
-                <HyperlinkButton Foreground="White"
-                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
-                                 CommandParameter="engine">Engine</HyperlinkButton>
-                <HyperlinkButton Foreground="White"
-                                 Command="{x:Bind ViewModel.SelectConfigurationCommand}"
-                                 CommandParameter="export">Export To</HyperlinkButton>
-            </ListView.Items>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:MainMenuItem">
+                    <HyperlinkButton Content="{x:Bind Title}"
+                                     Margin="-10,0,-10,0"
+                                     HorizontalContentAlignment="Stretch"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Stretch"
+                                     VerticalContentAlignment="Stretch"
+                                     Command="{x:Bind SendMenuSelectionCommand}"
+                                     CommandParameter="{x:Bind Tag }">
+                    </HyperlinkButton>
+                </DataTemplate>
+            </ListView.ItemTemplate>
 
         </ListView>
 
@@ -54,23 +46,23 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition x:Name="ScrollingRow" Height="*"/>
+                <RowDefinition x:Name="scrollingRow" Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="MenuItemHeader"
+            <TextBlock x:Name="menuItemHeader"
                        Grid.Column="0" Grid.Row="0"
                        FontSize="24"
                        FontWeight="Bold"/>
 
             <ScrollViewer Grid.Column="0" Grid.Row="1"
-                          Height="{Binding ElementName=ScrollingRow, Path=ActualHeight}">
-                <Frame x:Name="ContentFrame"
+                          Height="{Binding ElementName=scrollingRow, Path=ActualHeight}">
+                <Frame x:Name="contentFrame"
                        IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
             </ScrollViewer>
 
         </Grid>
 
-        <map:J4JMapControl x:Name="MapControl"
+        <map:J4JMapControl x:Name="mapControl"
                            controls:DockPanel.Dock="Left"
                            IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
 
