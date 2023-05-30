@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ABI.Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RouteSnapper;
@@ -18,7 +17,11 @@ public class MainViewModel : ObservableObject
     {
         var appConfig = App.Current.Services.GetRequiredService<AppConfig>();
 
-        SelectConfigurationCommand = new RelayCommand<string>(SelectConfigurationHandler);
+        MainMenuItems.Add(new MainMenuItem("Intro/Help", "intro")  );
+        MainMenuItems.Add(new MainMenuItem("Source Files", "source"));
+        MainMenuItems.Add(new MainMenuItem("Filters", "filters"));
+        MainMenuItems.Add(new MainMenuItem("Snapping Engine", "engine"));
+        MainMenuItems.Add(new MainMenuItem("Export Targets", "export"));
     }
 
     public bool LockUiWhenBuilding
@@ -56,8 +59,5 @@ public class MainViewModel : ObservableObject
         private set => SetProperty(ref _uiLocked, value);
     }
 
-    public RelayCommand<string> SelectConfigurationCommand { get; }
-
-    private void SelectConfigurationHandler(string? cmd) =>
-        WeakReferenceMessenger.Default.Send(new MainMenuSelection(cmd ?? "intro"));
+    public ObservableCollection<MainMenuItem> MainMenuItems { get; } = new();
 }
