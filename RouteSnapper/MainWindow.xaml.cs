@@ -31,25 +31,25 @@ public sealed partial class MainWindow
 
         winSupport.SetSizeAndPosition();
 
-        MapControl.FileSystemCachePath = Path.Combine( AppConfigBase.UserFolder, "map-cache" );
-        MapControl.NewCredentials += MapControlOnNewCredentials;
+        mapControl.FileSystemCachePath = Path.Combine( AppConfigBase.UserFolder, "map-cache" );
+        mapControl.NewCredentials += MapControlOnNewCredentials;
 
         _appConfig = App.Current.Services.GetService<AppConfig>();
 
         if( _appConfig is { UserConfigurationFileExists: true } )
         {
-            MapControl.MapProjection = string.IsNullOrEmpty( _appConfig.MapViewModel.ProjectionName )
+            mapControl.MapProjection = string.IsNullOrEmpty( _appConfig.MapViewModel.ProjectionName )
                 ? "BingMaps"
                 : _appConfig.MapViewModel.ProjectionName;
 
-            MapControl.Center = _appConfig.MapViewModel.Center;
-            MapControl.Heading = _appConfig.MapViewModel.Heading;
-            MapControl.MapScale = _appConfig.MapViewModel.Scale;
+            mapControl.Center = _appConfig.MapViewModel.Center;
+            mapControl.Heading = _appConfig.MapViewModel.Heading;
+            mapControl.MapScale = _appConfig.MapViewModel.Scale;
         }
         else
         {
-            MapControl.MapProjection = "BingMaps";
-            MapControl.Center = "37.5072N,122.2605W";
+            mapControl.MapProjection = "BingMaps";
+            mapControl.Center = "37.5072N,122.2605W";
         }
 
         ViewModel = new MainViewModel();
@@ -60,22 +60,22 @@ public sealed partial class MainWindow
         _mainMenuItems.Add("engine", new MainMenuItem("Snapping Engine", new SnapperEngine()));
         _mainMenuItems.Add("export", new MainMenuItem("Export Targets", new Export()));
 
-        MenuItems.SelectedIndex = 0;
-        MenuItemHeader.Text = _mainMenuItems["intro"].Title;
-        ContentFrame.Content = _mainMenuItems["intro"].Control;
+        menuItems.SelectedIndex = 0;
+        menuItemHeader.Text = _mainMenuItems["intro"].Title;
+        contentFrame.Content = _mainMenuItems["intro"].Control;
 
-        WeakReferenceMessenger.Default.Register<MainMenuSelection>(this, MenuMenuSelectionHandler);
+        WeakReferenceMessenger.Default.Register<MainMenuSelectionMessage>(this, MenuMenuSelectionHandler);
     }
 
-    private void MenuMenuSelectionHandler(object recipient, MainMenuSelection message)
+    private void MenuMenuSelectionHandler(object recipient, MainMenuSelectionMessage message)
     {
         var menuItem = _mainMenuItems.TryGetValue(message.MenuItem, out var contentControl)
             ? contentControl
             : _mainMenuItems["intro"];
 
-        MenuItemHeader.Text = menuItem.Title;
-        ContentFrame.Content = menuItem.Control;
-        MenuItems.SelectedIndex = _mainMenuItems.Keys.ToList().IndexOf(message.MenuItem);
+        menuItemHeader.Text = menuItem.Title;
+        contentFrame.Content = menuItem.Control;
+        menuItems.SelectedIndex = _mainMenuItems.Keys.ToList().IndexOf(message.MenuItem);
     }
 
     public MainViewModel ViewModel { get; }
