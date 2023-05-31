@@ -1,5 +1,23 @@
-// Copyright (c) Microsoft Corporation and Contributors.
-// Licensed under the MIT License.
+#region copyright
+// Copyright (c) 2021, 2022, 2023 Mark A. Olbert 
+// https://www.JumpForJoySoftware.com
+// MainWindow.xaml.cs
+//
+// This file is part of JumpForJoy Software's RouteSnapper.
+// 
+// RouteSnapper is free software: you can redistribute it and/or modify it 
+// under the terms of the GNU General Public License as published by the 
+// Free Software Foundation, either version 3 of the License, or 
+// (at your option) any later version.
+// 
+// RouteSnapper is distributed in the hope that it will be useful, but 
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// for more details.
+// 
+// You should have received a copy of the GNU General Public License along 
+// with RouteSnapper. If not, see <https://www.gnu.org/licenses/>.
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -25,14 +43,13 @@ public sealed partial class MainWindow
     public MainWindow()
     {
         var winSupport = new MainWinSerializer( this );
-        MapControlViewModelLocator.Initialize( App.Current.Services );
 
         this.InitializeComponent();
 
         winSupport.SetSizeAndPosition();
 
-        mapControl.FileSystemCachePath = Path.Combine( AppConfigBase.UserFolder, "map-cache" );
-        mapControl.NewCredentials += MapControlOnNewCredentials;
+        mapControl.FileSystemCachePath = Path.Combine( WinUIConfigBase.UserFolder, "map-cache" );
+        mapControl.ValidCredentials += MapControlOnValidCredentials;
 
         _appConfig = App.Current.Services.GetService<AppConfig>();
 
@@ -49,8 +66,9 @@ public sealed partial class MainWindow
         else
         {
             mapControl.MapProjection = "BingMaps";
-            mapControl.Center = "37.5072N,122.2605W";
         }
+
+        mapControl.Center = "37.5072N,122.2605W";
 
         ViewModel = new MainViewModel();
 
@@ -80,45 +98,37 @@ public sealed partial class MainWindow
 
     public MainViewModel ViewModel { get; }
 
-    private void MapControlOnNewCredentials( object? sender, NewCredentialsEventArgs e )
+    private void MapControlOnValidCredentials( object? sender, ValidCredentialsEventArgs e )
     {
         if( _appConfig == null )
             return;
 
         _appConfig.MapViewModel.ProjectionName = e.ProjectionName;
 
-        foreach( var credProp in e.Credentials
-                                  .CredentialProperties
-                                  .Where( x => x.Value?.ToString() != null ) )
+        // no need to update if the initial attempt, based on the config file,
+        // succeeded
+        if( e.AttemptNumber == 0 )
+            return;
+
+        _appConfig.EngineViewModel.MapCredentials ??= new MapCredentials();
+
+        switch( e.Credentials )
         {
-            switch( e.ProjectionName.ToLower() )
-            {
-                case "bingmaps":
-                    _appConfig.EngineViewModel.BingKey = (string) credProp.Value!;
-                    break;
+            case BingCredentials bingCredentials:
+                _appConfig.EngineViewModel.MapCredentials.BingCredentials = bingCredentials;
+                break;
 
-                case "googlemaps":
-                    switch( credProp.PropertyName )
-                    {
-                        case nameof( GoogleCredentials.ApiKey ):
-                            _appConfig.EngineViewModel.GoogleKey = (string) credProp.Value!;
-                            break;
+            case GoogleCredentials googleCredentials:
+                _appConfig.EngineViewModel.MapCredentials.GoogleCredentials = googleCredentials;
+                break;
 
-                        case nameof( GoogleCredentials.SignatureSecret ):
-                            _appConfig.EngineViewModel.GoogleSignatureSecret = (string) credProp.Value!;
-                            break;
-                    }
+            case OpenStreetCredentials openStreetCredentials:
+                _appConfig.EngineViewModel.MapCredentials.OpenStreetCredentials = openStreetCredentials;
+                break;
 
-                    break;
-
-                case "openstreetmaps":
-                    _appConfig.EngineViewModel.OpenStreetMapsKey = (string) credProp.Value!;
-                    break;
-
-                case "opentopomaps":
-                    _appConfig.EngineViewModel.OpenTopoMapsKey = (string) credProp.Value!;
-                    break;
-            }
+            case OpenTopoCredentials openTopoCredentials:
+                _appConfig.EngineViewModel.MapCredentials.OpenTopoCredentials = openTopoCredentials;
+                break;
         }
     }
 }
