@@ -24,12 +24,9 @@ with RouteSnapper. If not, see <https://www.gnu.org/licenses/>.
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:RouteSnapper"
-    xmlns:navpages="using:RouteSnapper.nav_pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:map="using:J4JSoftware.J4JMapWinLibrary"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core" 
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d"
     Title="Route Snapper">
