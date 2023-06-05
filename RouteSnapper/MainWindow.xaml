@@ -84,6 +84,7 @@ with RouteSnapper. If not, see <https://www.gnu.org/licenses/>.
                            controls:DockPanel.Dock="Left"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Center"
+                           StretchStyle="PreserveAspectRatio"
                            IsEnabled="{Binding Path=UiLocked, Source={StaticResource GlobalViewModel}, Converter={StaticResource BoolNegation }}"/>
 
     </controls:DockPanel>
